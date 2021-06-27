@@ -1,0 +1,5 @@
+,Model Name,Params,Mean Validation RMSE(£),Mean Validation R2(%),Mean Training RMSE(£),Mean Training R2(%),Date
+0,Linear Regression,"{'clf': TransformedTargetRegressor(func=<ufunc 'log'>, inverse_func=<ufunc 'exp'>,
+                           regressor=LinearRegression())}",-1633.1183291404568,0.9704239281912839,-1630.3099627404129,0.9707548587003071,28-06-2021 00:46:47
+0,Linear Regression,"{'clf': TransformedTargetRegressor(func=<ufunc 'log'>, inverse_func=<ufunc 'exp'>,
+                           regressor=LinearRegression())}",-1633.1183291404568,0.9704239281912839,-1630.3099627404129,0.9707548587003071,28-06-2021 00:47:04
