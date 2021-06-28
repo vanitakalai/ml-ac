@@ -1,0 +1,12 @@
+{
+  "name": "ML AG app",
+  "keywords": [
+    "ML",
+  ],
+  "repository": "https://github.com/vanitakalai/ml-ac",
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+}
