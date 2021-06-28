@@ -1,1 +1,1 @@
-web: poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi && streamlit run app.py
+web: sh setup.sh && streamlit run app.py
