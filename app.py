@@ -44,15 +44,30 @@ def plot_counts(dataset: pd.DataFrame, rows: pd.DataFrame) -> None:
     st.pyplot(fig)
 
 
-def plot_relationships(dataset: pd.DataFrame, y_name: str) -> None:
+def plot_relationships(dataset: pd.DataFrame) -> None:
     st.subheader("What is the relationship to the cost?")
-    var = st.selectbox("Variable Name:", dataset.columns)
 
-    if var in DUMMY_COLS:
-        fig = sns.displot(data=dataset, x=y_name, hue=var, kind="kde", aspect=3)
-    else:
+    col_a, col_b = st.beta_columns((1, 1))
+    var_x = col_a.selectbox("X:", dataset.columns)
+    var_y = col_b.selectbox("Y:", [i for i in dataset.columns if i != var_x])
+
+    if (var_x in DUMMY_COLS) & (var_y not in DUMMY_COLS):
+        fig = sns.displot(data=dataset, x=var_y, hue=var_x, kind="kde", aspect=3)
+    elif (var_y in DUMMY_COLS) & (var_x not in DUMMY_COLS):
+        fig = sns.displot(data=dataset, x=var_x, hue=var_y, kind="kde", aspect=3)
+    elif (var_x not in DUMMY_COLS) & (var_y not in DUMMY_COLS):
         fig = sns.FacetGrid(dataset, aspect=3)
-        fig.map(sns.regplot, var, y_name)
+        fig.map(sns.regplot, var_x, var_y)
+    else:
+        data = (
+            dataset.groupby([var_x, var_y])
+            .count()
+            .groupby(level=0)
+            .apply(lambda x: x / x.sum() * 100)
+        )
+        value_col = data.columns[0]
+        data = data.reset_index().rename(columns={value_col: '%'})
+        fig = sns.catplot(x=var_x, y='%', hue=var_y, data=data, kind="bar", aspect=3, ci=None)
 
     st.pyplot(fig)
 
@@ -144,7 +159,7 @@ def app_view():
         )
 
         plot_counts(dataset_raw, rows)
-        plot_relationships(dataset, f"LOG({y.columns[0]})")
+        plot_relationships(dataset)
         st.subheader("Training a model to predict cost")
         estimator, report, feature_imps = show_model(X, y)
 
